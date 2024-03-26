@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ProductListItemModel } from '../../pages/product-list-page/product-list-page.models';
+import { ProductListPageAPIService } from '../../services/product-list-page/product-list-page-api.service';
+import { of, tap, switchMap } from 'rxjs';
 
 @Component({
     selector: 'app-product-list',
@@ -7,16 +9,22 @@ import { ProductListItemModel } from '../../pages/product-list-page/product-list
     styleUrl: './product-list.component.scss'
 })
 export class ProductListComponent {
-    list: ProductListItemModel[] = [
-        {
-            id: "081fc8e1-d76f-4dd4-ad78-7e9310a0725c",
-            name: "Soprano Sofa",
-            created: "2015-05-22T14:56:29.000Z",
-        },
-        {
-            id: "2a792534-844c-45bc-b61b-cdd211273d24",
-            name: "Bork",
-            created: "2015-05-22T14:56:29.000Z",
-        },
-    ];
+    public list: ProductListItemModel[] = [];
+    public isLoading = false;
+
+    constructor(
+        private readonly _serviceAPI: ProductListPageAPIService,
+    ) {
+        of(null).pipe(
+            tap(() => this.isLoading = true),
+            switchMap(() => this._serviceAPI.GetProductList()),
+            tap(model => this.list = model),
+            tap(() => this.isLoading = false),
+        ).subscribe({
+            error: () => {
+                alert('Ошибка');
+            }
+        });
+    }
+
 }
