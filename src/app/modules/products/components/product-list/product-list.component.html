@@ -1,0 +1,9 @@
+
+<div *ngFor="let product of list" >
+    <strong class="me-1">{{product.id}}</strong>
+    <span class="me-1">{{product.name}}</span>
+    <span class="badge text-bg-primary me-1">{{product.created | date: 'dd.MM.yyyy HH:mm'}}</span>
+    <button mat-mini-fab color="primary" [routerLink]="['./' + product.id]">
+        <mat-icon>open_in_new</mat-icon>
+      </button>
+</div>
